@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transport Service</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #334155;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 15px 40px;
+            color: black;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-radius: 20px;
+        }
+
+        .navbar .logo {
+            font-weight: 700;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar .logo span {
+            color: #93c5fd;
+            margin-left: 5px;
+        }
+
+        .navbar .logo i {
+            margin-right: 10px;
+            font-size: 28px;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links li {
+            position: relative;
+        }
+
+        .nav-links a {
+            color: black;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .nav-links a i {
+            margin-right: 8px;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            background: white;
+            color: #334155;
+            padding: 15px;
+            list-style: none;
+            top: 100%;
+            left: 0;
+            min-width: 220px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            border-radius: 8px;
+            z-index: 10;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-menu li a {
+            color: #334155;
+            display: block;
+            padding: 10px 15px;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .dropdown-menu li a:hover {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .login-btn {
+            background: white;
+            color: #2563eb;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .login-btn i {
+            margin-right: 8px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .verification-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .verification-title {
+            font-size: 28px;
+            color: #1e40af;
+            margin-bottom: 15px;
+        }
+
+        .verification-desc {
+            font-size: 18px;
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+
+        .verification-form {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        .verify-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .verify-btn:hover {
+            background: #2563eb;
+        }
+
+        .transport-content {
+            display: none;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-size: 32px;
+            color: #1e40af;
+            margin-bottom: 10px;
+        }
+
+        .page-header p {
+            font-size: 18px;
+            color: #64748b;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: #64748b;
+        }
+
+        .transport-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .transport-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .transport-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .transport-header {
+            padding: 25px 25px 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .transport-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .transport-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: #10b981;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .transport-tags {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .transport-tag {
+            background: #eff6ff;
+            color: #1d4ed8;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .transport-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .transport-time {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .transport-price {
+            font-weight: 700;
+            color: #3b82f6;
+        }
+
+        .transport-description {
+            color: #64748b;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .transport-features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .transport-feature {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #475569;
+        }
+
+        .transport-feature i {
+            color: #10b981;
+        }
+
+        .transport-footer {
+            padding: 15px 25px;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .book-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .book-btn:hover {
+            background: #2563eb;
+        }
+
+        .drivers-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            color: #1e293b;
+            margin-bottom: 20px;
+        }
+
+        .drivers-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .driver-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+        }
+
+        .driver-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .driver-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #3b82f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .driver-info {
+            flex: 1;
+        }
+
+        .driver-name {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 5px;
+        }
+
+        .driver-contact {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .driver-type {
+            background: #f1f5f9;
+            color: #475569;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            display: inline-block;
+        }
+
+        .driver-details {
+            margin-bottom: 15px;
+        }
+
+        .driver-detail {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .detail-label {
+            color: #64748b;
+        }
+
+        .detail-value {
+            font-weight: 500;
+            color: #1e293b;
+        }
+
+        .driver-features {
+            margin-top: 15px;
+        }
+
+        .feature-title {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+
+        .features-list {
+            list-style: none;
+        }
+
+        .feature-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+
+        .feature-item i {
+            color: #10b981;
+        }
+
+        .safety-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-bottom: 40px;
+        }
+
+        .safety-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+
+        .safety-card {
+            margin-bottom: 20px;
+        }
+
+        .safety-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .safety-title {
+            font-size: 20px;
+            color: #1e40af;
+            margin-bottom: 15px;
+        }
+
+        .safety-desc {
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .protocol-list {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .protocol-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .protocol-item:last-child {
+            border-bottom: none;
+        }
+
+        .protocol-item i {
+            color: #ef4444;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .action-btn {
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .guidelines-btn {
+            background: #f1f5f9;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+        }
+
+        .guidelines-btn:hover {
+            background: #e2e8f0;
+        }
+
+        .contacts-btn {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .contacts-btn:hover {
+            background: #2563eb;
+        }
+
+        @media (max-width: 1024px) {
+            .transport-options, .drivers-grid, .safety-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .transport-options, .drivers-grid, .safety-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-shield-alt"></i>
+            Tourist <span>Safety</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="./index.html"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="./touristplace.html"><i class="fas fa-microchip"></i> Tourist Places</a></li>
+            <li class="dropdown">
+                <a href="#" class="active"><i class="fas fa-concierge-bell"></i> Tourist Services ▾</a>
+                <ul class="dropdown-menu">
+                    <li><a href="./logguide.html"><i class="fas fa-map-marked-alt"></i> Guides</a></li>
+                    <li><a href="./travel.html"><i class="fas fa-bus"></i> Transport</a></li>
+                    <li><a href="./emergency.html"><i class="fas fa-ambulance"></i> Emergency</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#"><i class="fas fa-user-shield"></i> Authorities ▾</a>
+                <ul class="dropdown-menu">
+                    <li><a href="./policedash.html"><i class="fas fa-tachometer-alt"></i> Police Dashboard</a></li>
+                    <li><a href="./adminaccess.html"><i class="fas fa-landmark"></i> Tourism Department</a></li>
+                   <li><a href="./addplace.html"><i class="fas fa-file-alt"></i> Tourist Place Management</a></li>
+                   <li><a href="./efir.html"><i class="fas fa-file-alt"></i> E-FIR Management</a></li>
+                    <li><a href="./iotmanage.html"><i class="fas fa-file-alt"></i> IoT Monitoring</a></li>
+                </ul>
+            </li>
+            <li><a href="./iotint.html"><i class="fas fa-microchip"></i> IoT Integration</a></li>
+        </ul>
+        <a href="./logguide.html" style="text-decoration: none;"><button class="login-btn"><i class="fas fa-sign-in-alt"></i> Login</button></a>
+    </nav>
+
+    <div class="container">
+        <!-- Verification Section -->
+        <div class="verification-section" id="verification-section">
+            <h2 class="verification-title">Blockchain Tourist ID Verification</h2>
+            <p class="verification-desc">Please enter your Digital Tourist ID to access transport services</p>
+            
+            <div class="verification-form">
+                <div class="form-group">
+                    <label for="tourist-id">Digital Tourist ID</label>
+                    <input type="text" id="tourist-id" placeholder="Enter your DTID (e.g., DT2024001)">
+                </div>
+                <button class="verify-btn" onclick="verifyTouristId()">Verify ID</button>
+            </div>
+        </div>
+
+        <!-- Transport Content (hidden until verification) -->
+        <div class="transport-content" id="transport-content">
+            <div class="page-header">
+                <h1>Transport Service</h1>
+                <p>Safety-first transportation with verified drivers, real-time tracking, and integrated emergency response</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">4</div>
+                    <div class="stat-label">Active Rides</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">2.4m</div>
+                    <div class="stat-label">Avg Response Time</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">99.2%</div>
+                    <div class="stat-label">Safety Score</div>
+                </div>
+            </div>
+
+            <h2 class="section-title">Available Transport Options</h2>
+            <div class="transport-options">
+                <!-- Safety Taxi -->
+                <div class="transport-card">
+                    <div class="transport-header">
+                        <div class="transport-name">
+                            Safety Taxi
+                            <span class="transport-rating">4.8</span>
+                        </div>
+                        <div class="transport-tags">
+                            <span class="transport-tag">GPS Safe</span>
+                        </div>
+                        <div class="transport-details">
+                            <div class="transport-time">3 min</div>
+                            <div class="transport-price">$120-150</div>
+                        </div>
+                        <div class="transport-description">Verified drivers with real-time tracking</div>
+                    </div>
+                    <div class="transport-features">
+                        <div class="transport-feature">
+                            <i class="fas fa-check-circle"></i> GPS Tracking
+                        </div>
+                        <div class="transport-feature">
+                            <i class="fas fa-check-circle"></i> Emergency Button
+                        </div>
+                        <div class="transport-feature">
+                            <i class="fas fa-check-circle"></i> Driver Verification
+                        </div>
+                        <div class="transport-feature">
+                            <i class="fas fa-check-circle"></i> Route Monitoring
+                        </div>
+                    </div>
+                    <div class="transport-footer">
+                        <button class="book-btn">Book Now</button>
+                    </div>
+                </div>
+
+                <!-- Tourist Bus -->
+                <div class="transport-card">
+                    <div class="transport-header">
+                        <div class="transport-name">
+                            Tourist Bus
+                            <span class="transport-rating">4.6</span>
+                        </div>
+                        <div class="transport-tags">
+                            <span class="transport-tag">GPS Safe</span>
+                        </div>
+                        <div class="transport-details">
+                            <div class="transport-time">15 min</div>
+                            <div class="transport-price">$50-80</div>
+                        </div>
+                        <div class="transport-description">Guided tours with safety protocols</div>
+                    </div>
+                    <div class="transport-features">
+                        <div class="transport-feature">
+                            <i class="fas fa-check-circle"></i> Tour Guide
+                        </div>
+                        <div class="transport-feature">
+                            <i class="fas fa-check-circle"></i> Group Safety
+                        </div>
+                        <div class="transport-feature">
+                            <i class="fas fa-check-circle"></i> Emergency Exits
+                        </div>
+                        <div class="transport-feature">
+                            <i class="fas fa-check-circle"></i> First Aid Kit
+                        </div>
+                    </div>
+                    <div class="transport-footer">
+                        <button class="book-btn">Book Now</button>
+                    </div>
+                </div>
+
+                <!-- Smart Auto -->
+                <div class="transport-card">
+                    <div class="transport-header">
+                        <div class="transport-name">
+                            Smart Auto
+                            <span class="transport-rating">4.4</span>
+                        </div>
+                        <div class="transport-tags">
+                            <span class="transport-tag">GPS Safe</span>
+                        </div>
+                        <div class="transport-details">
+                            <div class="transport-time">5 min</div>
+                            <div class="transport-price">$30-60</div>
+                        </div>
+                        <div class="transport-description">IoT-enabled auto-rideshaws</div>
+                    </div>
+                    <div class="transport-features">
+                        <div class="transport-feature">
+                            <i class="fas fa-check-circle"></i> Fare Calculator
+                        </div>
+                        <div class="transport-feature">
+                            <i class="fas fa-check-circle"></i> Safety Alerts
+                        </div>
+                        <div class="transport-feature">
+                            <i class="fas fa-check-circle"></i> Route Optimization
+                        </div>
+                        <div class="transport-feature">
+                            <i class="fas fa-check-circle"></i> Digital Payment
+                        </div>
+                    </div>
+                    <div class="transport-footer">
+                        <button class="book-btn">Book Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="drivers-section">
+                <h2 class="section-title">Nearby Verified Drivers</h2>
+                <div class="drivers-grid">
+                    <!-- Driver 1: Rajesh Kumar -->
+                    <div class="driver-card">
+                        <div class="driver-header">
+                            <div class="driver-avatar">RK</div>
+                            <div class="driver-info">
+                                <div class="driver-name">Rajesh Kumar</div>
+                                <div class="driver-contact">+49</div>
+                                <div class="driver-type">Taxi</div>
+                            </div>
+                        </div>
+                        <div class="driver-details">
+                            <div class="driver-detail">
+                                <span class="detail-label">Location:</span>
+                                <span class="detail-value">Near Gateway of India</span>
+                            </div>
+                            <div class="driver-detail">
+                                <span class="detail-label">Distance:</span>
+                                <span class="detail-value">0.8 km</span>
+                            </div>
+                            <div class="driver-detail">
+                                <span class="detail-label">Rides:</span>
+                                <span class="detail-value">1,247</span>
+                            </div>
+                        </div>
+                        <div class="driver-features">
+                            <div class="feature-title">Safety Features:</div>
+                            <ul class="features-list">
+                                <li class="feature-item">
+                                    <i class="fas fa-check"></i> Emergency Button
+                                </li>
+                                <li class="feature-item">
+                                    <i class="fas fa-check"></i> Real-time Tracking
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Driver 2: Priya Sharma -->
+                    <div class="driver-card">
+                        <div class="driver-header">
+                            <div class="driver-avatar">PS</div>
+                            <div class="driver-info">
+                                <div class="driver-name">Priya Sharma</div>
+                                <div class="driver-contact">+47</div>
+                                <div class="driver-type">Auto</div>
+                            </div>
+                        </div>
+                        <div class="driver-details">
+                            <div class="driver-detail">
+                                <span class="detail-label">Location:</span>
+                                <span class="detail-value">Colaba Market</span>
+                            </div>
+                            <div class="driver-detail">
+                                <span class="detail-label">Distance:</span>
+                                <span class="detail-value">1.2 km</span>
+                            </div>
+                            <div class="driver-detail">
+                                <span class="detail-label">Rides:</span>
+                                <span class="detail-value">892</span>
+                            </div>
+                        </div>
+                        <div class="driver-features">
+                            <div class="feature-title">Safety Features:</div>
+                            <ul class="features-list">
+                                <li class="feature-item">
+                                    <i class="fas fa-check"></i> GPS Tracking
+                                </li>
+                                <li class="feature-item">
+                                    <i class="fas fa-check"></i> Panic Alert
+                                </li>
+                                <li class="feature-item">
+                                    <i class="fas fa-check"></i> Driver Verification
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Driver 3: Mohammed Ali -->
+                    <div class="driver-card">
+                        <div class="driver-header">
+                            <div class="driver-avatar">MA</div>
+                            <div class="driver-info">
+                                <div class="driver-name">Mohammed Ali</div>
+                                <div class="driver-contact">+48</div>
+                                <div class="driver-type">Bus</div>
+                            </div>
+                        </div>
+                        <div class="driver-details">
+                            <div class="driver-detail">
+                                <span class="detail-label">Location:</span>
+                                <span class="detail-value">Marine Drive</span>
+                            </div>
+                            <div class="driver-detail">
+                                <span class="detail-label">Distance:</span>
+                                <span class="detail-value">2.1 km</span>
+                            </div>
+                            <div class="driver-detail">
+                                <span class="detail-label">Rides:</span>
+                                <span class="detail-value">634</span>
+                            </div>
+                        </div>
+                        <div class="driver-features">
+                            <div class="feature-title">Safety Features:</div>
+                            <ul class="features-list">
+                                <li class="feature-item">
+                                    <i class="fas fa-check"></i> Tour Guide
+                                </li>
+                                <li class="feature-item">
+                                    <i class="fas fa-check"></i> Group Safety
+                                </li>
+                                <li class="feature-item">
+                                    <i class="fas fa-check"></i> Emergency Protocol
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="safety-section">
+                <h2 class="section-title">Transport Safety Features</h2>
+                <div class="safety-grid">
+                    <div>
+                        <div class="safety-card">
+                            <h3 class="safety-title">Panic Button</h3>
+                            <p class="safety-desc">Instant alerts to authorities and contacts</p>
+                        </div>
+                        <div class="safety-card">
+                            <h3 class="safety-title">Route Monitoring</h3>
+                            <p class="safety-desc">AI-powered route deviation detection</p>
+                        </div>
+                        <div class="safety-card">
+                            <h3 class="safety-title">Connected Vehicles</h3>
+                            <p class="safety-desc">IoT sensors for health and safety monitoring</p>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="safety-card">
+                            <h3 class="safety-title">Emergency Transport Protocol</h3>
+                            <p class="safety-desc">In case of emergency during transport, our integrated safety system ensures immediate response:</p>
+                            
+                            <h4>Automatic Response:</h4>
+                            <ul class="protocol-list">
+                                <li class="protocol-item">
+                                    <i class="fas fa-bell"></i> Instant location sharing with authorities
+                                </li>
+                                <li class="protocol-item">
+                                    <i class="fas fa-bell"></i> Emergency contact notification
+                                </li>
+                                <li class="protocol-item">
+                                    <i class="fas fa-bell"></i> Real-time audio/video recording
+                                </li>
+                            </ul>
+                            
+                            <h4>Manual Actions:</h4>
+                            <ul class="protocol-list">
+                                <li class="protocol-item">
+                                    <i class="fas fa-hand-point-up"></i> Press panic button in vehicle
+                                </li>
+                                <li class="protocol-item">
+                                    <i class="fas fa-microphone"></i> Voice command: "Emergency Help"
+                                </li>
+                                <li class="protocol-item">
+                                    <i class="fas fa-mobile-alt"></i> Shake phone vigorously (3x)
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="action-btn guidelines-btn">View Safety Guidelines</button>
+                            <button class="action-btn contacts-btn">Emergency Contacts</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function verifyTouristId() {
+            const touristId = document.getElementById('tourist-id').value;
+            
+            // Simple validation for demonstration
+            if (touristId && touristId.startsWith('DT')) {
+                document.getElementById('verification-section').style.display = 'none';
+                document.getElementById('transport-content').style.display = 'block';
+            } else {
+                alert('Please enter a valid Tourist ID starting with DT (e.g., DT2024001)');
+            }
+        }
+
+        // Book button functionality
+        document.querySelectorAll('.book-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const transportCard = this.closest('.transport-card');
+                const transportName = transportCard.querySelector('.transport-name').textContent.split('★')[0].trim();
+                alert(`Booking ${transportName} service...`);
+            });
+        });
+
+        // Action buttons functionality
+        document.querySelector('.guidelines-btn').addEventListener('click', function() {
+            alert('Opening Safety Guidelines...');
+        });
+
+        document.querySelector('.contacts-btn').addEventListener('click', function() {
+            alert('Opening Emergency Contacts...');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart IoT Wearables - Tourist Safety</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #334155;
+            line-height: 1.6;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 15px 40px;
+            color: black;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-radius: 20px;
+        }
+        
+        .navbar .logo {
+            font-weight: 700;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .navbar .logo span {
+            color: #93c5fd;
+            margin-left: 5px;
+        }
+        
+        .navbar .logo i {
+            margin-right: 10px;
+            font-size: 28px;
+        }
+        
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+        }
+        
+        .nav-links li {
+            position: relative;
+        }
+        
+        .nav-links a {
+            color: black;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .nav-links a i {
+            margin-right: 8px;
+        }
+        
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            background: white;
+            color: #334155;
+            padding: 15px;
+            list-style: none;
+            top: 100%;
+            left: 0;
+            min-width: 220px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            border-radius: 8px;
+            z-index: 10;
+        }
+        
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+        
+        .dropdown-menu li a {
+            color: #334155;
+            display: block;
+            padding: 10px 15px;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+        
+        .dropdown-menu li a:hover {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+        
+        .login-btn {
+            background: white;
+            color: #2563eb;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .login-btn i {
+            margin-right: 8px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(30, 64, 175, 0.85), rgba(59, 130, 246, 0.85)), url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 80px 20px;
+            margin-bottom: 40px;
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 16px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Section Styles */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            color: #1e40af;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .section h3 {
+            color: #3b82f6;
+            margin: 25px 0 15px;
+        }
+
+        /* Smart Band Section */
+        .smart-band {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .band-image {
+            flex: 1;
+            text-align: center;
+        }
+
+        .band-image img {
+            max-width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .band-features {
+            flex: 1;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .feature-item {
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .feature-item i {
+            font-size: 2rem;
+            color: #3b82f6;
+            margin-bottom: 10px;
+        }
+
+        /* Features Section */
+        .features-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-card h3 {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 i {
+            margin-right: 10px;
+            font-size: 1.5rem;
+            color: #3b82f6;
+        }
+
+        /* Benefits Section */
+        .benefits {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .benefit-card {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .benefit-card h3 {
+            color: #1e40af;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .checklist {
+            list-style: none;
+        }
+
+        .checklist li {
+            padding: 8px 0;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .checklist li:before {
+            content: "✓";
+            color: #10b981;
+            font-weight: bold;
+            display: inline-block;
+            width: 25px;
+            font-size: 1.2rem;
+        }
+
+        /* Specifications Table */
+        .specs-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .specs-table th, .specs-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .specs-table th {
+            background: #f1f5f9;
+            color: #1e40af;
+        }
+
+        .specs-table tr:hover {
+            background: #f8fafc;
+        }
+
+        .specs-table ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .specs-table li {
+            padding: 5px 0;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .specs-table li:before {
+            content: "•";
+            color: #3b82f6;
+            font-weight: bold;
+            display: inline-block;
+            width: 20px;
+            font-size: 1.2rem;
+        }
+
+        /* Footer */
+        footer {
+            background: #1e293b;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .footer-links a {
+            color: #93c5fd;
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .smart-band {
+                flex-direction: column;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-shield-alt"></i>
+            Tourist <span>Safety</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="./index.html" class="active"><i class="fas fa-home"></i> Home</a></li>
+        <li><a href="./touristplace.html"><i class="fas fa-microchip"></i> Tourist Places</a></li>
+        <li class="dropdown">
+          <a href="#"><i class="fas fa-concierge-bell"></i> Tourist Services ▾</a>
+          <ul class="dropdown-menu">
+            <li><a href="./logguide.html"><i class="fas fa-map-marked-alt"></i> Guides</a></li>
+            <li><a href="./travel.html"><i class="fas fa-bus"></i> Transport</a></li>
+            <li><a href="./emergency.html"><i class="fas fa-ambulance"></i> Emergency</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="#"><i class="fas fa-user-shield"></i> Authorities ▾</a>
+          <ul class="dropdown-menu">
+            <li><a href="./policedash.html"><i class="fas fa-tachometer-alt"></i> Police Dashboard</a></li>
+            <li><a href="./adminaccess.html"><i class="fas fa-landmark"></i> Tourism Department</a></li>
+           <li><a href="./addplace.html"><i class="fas fa-file-alt"></i> Tourist Place Management</a></li>
+           <li><a href="./efir.html"><i class="fas fa-file-alt"></i> E-FIR Management</a></li>
+            <li><a href="./iotmanage.html"><i class="fas fa-file-alt"></i> IoT Monitoring</a></li>
+          </ul>
+        </li>
+        <li><a href="./iotint.html"><i class="fas fa-microchip"></i> IoT Integration</a></li>
+      </ul>
+      <a href="logguide.html" style="text-decoration: none;"><button class="login-btn"><i class="fas fa-sign-in-alt"></i> Login</button></a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Smart IoT Wearables</h1>
+        <p>Advanced wearable technology ensuring tourist safety through real-time monitoring, predictive hazard detection, and instant emergency response capabilities.</p>
+    </section>
+
+    <div class="container">
+        <!-- Smart Band Section -->
+        <section class="section">
+            <div class="smart-band">
+                <div class="band-image">
+                    <img src="./SIH-IOT-WEARABLE-IMG.jpg" alt="SafeGuard Smart Band">
+                </div>
+                <div class="band-features">
+                    <h2>SafeGuard Smart Band</h2>
+                    <p>Our cutting-edge wearable device combines multiple safety technologies into a sleek, comfortable design that tourists can wear throughout their journey.</p>
+                    
+                    <div class="features-grid">
+                        <div class="feature-item">
+                            <i class="fas fa-tint"></i>
+                            <h4>Water Resistant</h4>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-battery-full"></i>
+                            <h4>7-Day Battery</h4>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-sync"></i>
+                            <h4>Real-time Sync</h4>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-language"></i>
+                            <h4>Multi-language</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="section">
+            <h2>Advanced Safety Features</h2>
+            <div class="features-section">
+                <div class="feature-card">
+                    <h3><i class="fas fa-map-marker-alt"></i> Geo-Fencing Alerts</h3>
+                    <p>Instant notifications when entering restricted or high-risk areas. Real-time boundary monitoring with customizable alert zones.</p>
+                </div>
+                <div class="feature-card">
+                    <h3><i class="fas fa-heartbeat"></i> Pulse Monitoring</h3>
+                    <p>Continuous heart rate monitoring with anomaly detection. Alerts authorities if unusual patterns detected.</p>
+                </div>
+                <div class="feature-card">
+                    <h3><i class="fas fa-exclamation-circle"></i> SOS Button</h3>
+                    <p>One-touch emergency button that instantly alerts authorities, shares location, and activates audio recording.</p>
+                </div>
+                <div class="feature-card">
+                    <h3><i class="fas fa-microphone"></i> Audio Recording</h3>
+                    <p>Automatic audio recording during emergencies. Provides crucial evidence and context for authorities.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits Section -->
+        <section class="section">
+            <h2>How It Prevents Predictive Hazards</h2>
+            <div class="benefits">
+                <div class="benefit-card">
+                    <h3>For Tourists:</h3>
+                    <ul class="checklist">
+                        <li>Receive instant alerts before entering dangerous areas</li>
+                        <li>Health monitoring prevents medical emergencies</li>
+                        <li>Quick SOS access ensures immediate help</li>
+                        <li>Real-time location sharing with emergency contacts</li>
+                    </ul>
+                </div>
+                <div class="benefit-card">
+                    <h3>For Authorities:</h3>
+                    <ul class="checklist">
+                        <li>Proactive threat detection and response</li>
+                        <li>Real-time tourist movement analytics</li>
+                        <li>Automated emergency response protocols</li>
+                        <li>Evidence collection for incident investigation</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Specifications Section -->
+        <section class="section">
+            <h2>Technical Specifications</h2>
+            <table class="specs-table">
+                <thead>
+                    <tr>
+                        <th>Connectivity</th>
+                        <th>Sensors</th>
+                        <th>Features</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <ul>
+                                <li>Bluetooth 5.0 Low Energy</li>
+                                <li>NB-IoT for remote areas</li>
+                                <li>Wi-Fi 802.11 b/g/n</li>
+                                <li>GPS + GLONASS</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul>
+                                <li>Heart Rate Monitor</li>
+                                <li>Accelerometer</li>
+                                <li>Gyroscope</li>
+                                <li>Environmental Sensors</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul>
+                                <li>OLED Color Display</li>
+                                <li>Built-in Microphone</li>
+                                <li>Vibration Motor</li>
+                                <li>IP68 Water Resistance</li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2025 Tourist Safety Platform. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact Us</a>
+                <a href="#">Help Center</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simple JavaScript for interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click event to login button
+            const loginBtn = document.querySelector('.login-btn');
+            if (loginBtn) {
+                loginBtn.addEventListener('click', function() {
+                    alert('Login functionality would open here.');
+                });
+            }
+            
+            // Add animation to feature cards on scroll
+            const featureCards = document.querySelectorAll('.feature-card');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            featureCards.forEach(card => {
+                card.style.opacity = 0;
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

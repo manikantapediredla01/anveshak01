@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tourist Safety Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        /* Navbar Styles */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 15px 40px;
+            color: black;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-radius: 20px;
+        }
+        
+        .navbar .logo {
+            font-weight: 700;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .navbar .logo span {
+            color: #93c5fd;
+            margin-left: 5px;
+        }
+        
+        .navbar .logo i {
+            margin-right: 10px;
+            font-size: 28px;
+        }
+        
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+        }
+        
+        .nav-links li {
+            position: relative;
+        }
+        
+        .nav-links a {
+            color: black;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .nav-links a i {
+            margin-right: 8px;
+        }
+        
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            background: white;
+            color: #334155;
+            padding: 15px;
+            list-style: none;
+            top: 100%;
+            left: 0;
+            min-width: 220px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            border-radius: 8px;
+            z-index: 10;
+        }
+        
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+        
+        .dropdown-menu li a {
+            color: #334155;
+            display: block;
+            padding: 10px 15px;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+        
+        .dropdown-menu li a:hover {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+        
+        .login-btn, .logout-btn {
+            background: white;
+            color: #2563eb;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .login-btn:hover, .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .login-btn i, .logout-btn i {
+            margin-right: 8px;
+        }
+        
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .dashboard-header h1 {
+            color: #1e40af;
+            font-size: 28px;
+        }
+        
+        .admin-info {
+            background: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .admin-info i {
+            font-size: 20px;
+            color: #3b82f6;
+        }
+        
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            background: linear-gradient(to right, #3b82f6, #60a5fa);
+            color: white;
+            padding: 20px;
+            font-size: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-header i {
+            font-size: 24px;
+        }
+        
+        .card-body {
+            padding: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: #3b82f6;
+            outline: none;
+        }
+        
+        .btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+        
+        /* Login Section */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+        }
+        
+        .login-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            padding: 30px;
+        }
+        
+        .login-card h2 {
+            text-align: center;
+            color: #1e40af;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        
+        .credentials-note {
+            background: #f0f9ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 14px;
+            color: #0369a1;
+        }
+        
+        /* Dashboard Sections */
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        /* Data Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .data-table th, .data-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .data-table th {
+            background: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        .data-table tr:hover {
+            background: #f3f4f6;
+        }
+        
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6b7280;
+        }
+        
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #9ca3af;
+        }
+        
+        .empty-state p {
+            font-size: 18px;
+        }
+        
+        /* Map container */
+        .map-container {
+            height: 400px;
+            background: #e5e7eb;
+            border-radius: 8px;
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #6b7280;
+            font-size: 18px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-shield-alt"></i>
+            Tourist <span>Safety</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="./index.html" data-section="dashboard"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="./touristplace.html"><i class="fas fa-microchip"></i>Tourist Places</a></li>
+            <li class="dropdown">
+                <a href="#"><i class="fas fa-concierge-bell"></i> Tourist Services ▾</a>
+                <ul class="dropdown-menu">
+                    <li><a href="./logguide.html"  data-section="guides"><i class="fas fa-map-marked-alt"></i> Guides</a></li>
+                    <li><a href="./travel.html"  data-section="transport"><i class="fas fa-bus"></i> Transport</a></li>
+                    <li><a href="./emergency.html"><i class="fas fa-ambulance"></i> Emergency</a></li>
+                </ul>
+            </li>
+           
+            <li class="dropdown">
+                <a href="#"><i class="fas fa-user-shield"></i> Authorities ▾</a>
+                <ul class="dropdown-menu">
+                    <li><a href="./policedash.html"><i class="fas fa-tachometer-alt"></i> Police Dashboard</a></li>
+                    <li><a href="./adminaccess.html"><i class="fas fa-landmark"></i> Tourism Department</a></li>
+                    <li><a href="./addplace.html"><i class="fas fa-file-alt"></i> Tourist Place Management</a></li>
+                    <li><a href="./efir.html"><i class="fas fa-file-alt"></i> E-FIR Management</a></li>
+                     <li><a href="./iotmanage.html"><i class="fas fa-file-alt"></i> IoT Monitoring</a></li>
+                    
+                </ul>
+            </li>
+            <li><a href="./iotint.html"><i class="fas fa-microchip"></i> IoT Integration</a></li>
+        </ul>
+        <button class="logout-btn" id="logoutBtn" style="display: none;"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        <button class="login-btn" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Login</button>
+    </nav>
+
+    <!-- Login Section -->
+    <div class="container login-container" id="loginSection">
+        <div class="login-card">
+            <h2>Admin Portal Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter admin username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter admin password" required>
+                </div>
+                <div class="credentials-note">
+                    <p><strong>Demo Credentials:</strong></p>
+                    <p>Username: admin</p>
+                    <p>Password: admin123</p>
+                </div>
+                <button type="submit" class="btn btn-block">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard Section -->
+    <div class="container section" id="dashboardSection">
+        <div class="dashboard-header">
+            <h1>Admin Dashboard</h1>
+            <div class="admin-info">
+                <i class="fas fa-user-cog"></i>
+                <span>Logged in as: <strong>Admin</strong></span>
+            </div>
+        </div>
+
+        <div class="cards-grid">
+            <!-- Tourist Places Card -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Tourist Places
+                </div>
+                <div class="card-body">
+                    <p>Manage tourist destinations with safety parameters and geofencing.</p>
+                    <button class="btn btn-block nav-link" data-section="places" style="margin-top: 20px;">
+                        <i class="fas fa-cog"></i> Manage Places
+                    </button>
+                </div>
+            </div>
+
+            <!-- Guides Card -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-user-check"></i>
+                    Tourist Guides
+                </div>
+                <div class="card-body">
+                    <p>Register and manage certified tourist guides for various destinations.</p>
+                    <button class="btn btn-block nav-link" data-section="guides" style="margin-top: 20px;">
+                        <i class="fas fa-cog"></i> Manage Guides
+                    </button>
+                </div>
+            </div>
+
+            <!-- Transport Card -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-bus"></i>
+                    Transport Options
+                </div>
+                <div class="card-body">
+                    <p>Add and manage transportation options for tourist destinations.</p>
+                    <button class="btn btn-block nav-link" data-section="transport" style="margin-top: 20px;">
+                        <i class="fas fa-cog"></i> Manage Transport
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity Section -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-history"></i>
+                Recent Activity
+            </div>
+            <div class="card-body">
+                <p>No recent activity to display. Start by adding tourist places, guides, or transport options.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tourist Places Section -->
+    <div class="container section" id="placesSection">
+        <div class="dashboard-header">
+            <h1>Tourist Places Management</h1>
+            <button class="btn nav-link" data-section="dashboard">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </button>
+        </div>
+
+        <div class="cards-grid">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-plus-circle"></i>
+                    Add Tourist Place
+                </div>
+                <div class="card-body">
+                    <form id="addPlaceForm">
+                        <div class="form-group">
+                            <label for="placeName">Place Name</label>
+                            <input type="text" id="placeName" placeholder="e.g., Red Fort, India Gate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="placeDescription">Description</label>
+                            <textarea id="placeDescription" rows="3" placeholder="Brief description of the tourist place" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="placeCategory">Category</label>
+                            <select id="placeCategory" required>
+                                <option value="">Select Category</option>
+                                <option value="Monument">Monument</option>
+                                <option value="Temple">Temple</option>
+                                <option value="Park">Park</option>
+                                <option value="Museum">Museum</option>
+                                <option value="Beach">Beach</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="riskLevel">Risk Level</label>
+                            <select id="riskLevel" required>
+                                <option value="Low Risk">Low Risk</option>
+                                <option value="Medium Risk">Medium Risk</option>
+                                <option value="High Risk">High Risk</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-block">
+                            <i class="fas fa-plus"></i> Add Tourist Place
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-map-marked-alt"></i>
+                    Interactive Map & Geofencing
+                </div>
+                <div class="card-body">
+                    <p>Click on the map to create geofence boundaries for tourist places</p>
+                    <div class="map-container">
+                        <i class="fas fa-map"></i>
+                        <span>Interactive Map Will Appear Here</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-list"></i>
+                Registered Tourist Places
+            </div>
+            <div class="card-body">
+                <div class="empty-state" id="placesEmptyState">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <p>No tourist places added yet</p>
+                </div>
+                <table class="data-table" id="placesTable" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Risk Level</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="placesTableBody">
+                        <!-- Places will be added here dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Guides Section -->
+    <div class="container section" id="guidesSection">
+        <div class="dashboard-header">
+            <h1>Tourist Guides Management</h1>
+            <button class="btn nav-link" data-section="dashboard">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </button>
+        </div>
+
+        <div class="cards-grid">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-user-plus"></i>
+                    Add Guide
+                </div>
+                <div class="card-body">
+                    <form id="addGuideForm">
+                        <div class="form-group">
+                            <label for="guideName">Guide Name</label>
+                            <input type="text" id="guideName" placeholder="Full name of the guide" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="guidePhone">Phone Number</label>
+                            <input type="tel" id="guidePhone" placeholder="+91 9876543210" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="guideLanguages">Languages (comma separated)</label>
+                            <input type="text" id="guideLanguages" placeholder="Hindi, English, Spanish" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="guideExperience">Experience (years)</label>
+                            <input type="number" id="guideExperience" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="guidePlace">Assigned Place</label>
+                            <select id="guidePlace">
+                                <option value="">Select place (optional)</option>
+                                <!-- Options will be populated from added places -->
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-block">
+                            <i class="fas fa-plus"></i> Add Guide
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-list"></i>
+                Registered Guides
+            </div>
+            <div class="card-body">
+                <div class="empty-state" id="guidesEmptyState">
+                    <i class="fas fa-users"></i>
+                    <p>No guides registered yet</p>
+                </div>
+                <table class="data-table" id="guidesTable" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Languages</th>
+                            <th>Experience</th>
+                            <th>Assigned Place</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="guidesTableBody">
+                        <!-- Guides will be added here dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transport Section -->
+    <div class="container section" id="transportSection">
+        <div class="dashboard-header">
+            <h1>Transport Options Management</h1>
+            <button class="btn nav-link" data-section="dashboard">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </button>
+        </div>
+
+        <div class="cards-grid">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-plus-circle"></i>
+                    Add Transport
+                </div>
+                <div class="card-body">
+                    <form id="addTransportForm">
+                        <div class="form-group">
+                            <label for="transportType">Transport Type</label>
+                            <select id="transportType" required>
+                                <option value="">Select Type</option>
+                                <option value="Taxi">Taxi</option>
+                                <option value="Bus">Bus</option>
+                                <option value="Metro">Metro</option>
+                                <option value="Auto">Auto Rickshaw</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="serviceName">Service Name</label>
+                            <input type="text" id="serviceName" placeholder="e.g., Delhi Metro, Uber" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="routeDescription">Route/Description</label>
+                            <input type="text" id="routeDescription" placeholder="e.g., Red Line to Central Secretariat" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactDetails">Contact</label>
+                            <input type="text" id="contactDetails" placeholder="Phone or booking details" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="fare">Fare (₹)</label>
+                            <input type="number" id="fare" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="transportPlace">Destination Place</label>
+                            <select id="transportPlace">
+                                <option value="">Select destination (optional)</option>
+                                <!-- Options will be populated from added places -->
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-block">
+                            <i class="fas fa-plus"></i> Add Transport Option
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-list"></i>
+                Transport Options
+            </div>
+            <div class="card-body">
+                <div class="empty-state" id="transportEmptyState">
+                    <i class="fas fa-bus"></i>
+                    <p>No transport options added yet</p>
+                </div>
+                <table class="data-table" id="transportTable" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Service Name</th>
+                            <th>Route</th>
+                            <th>Contact</th>
+                            <th>Fare</th>
+                            <th>Destination</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transportTableBody">
+                        <!-- Transport options will be added here dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const loginSection = document.getElementById('loginSection');
+            const dashboardSection = document.getElementById('dashboardSection');
+            const placesSection = document.getElementById('placesSection');
+            const guidesSection = document.getElementById('guidesSection');
+            const transportSection = document.getElementById('transportSection');
+            const loginForm = document.getElementById('loginForm');
+            const loginBtn = document.getElementById('loginBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            // Data storage
+            let touristPlaces = [];
+            let guides = [];
+            let transportOptions = [];
+            
+            // Check if user is logged in (from sessionStorage)
+            if (sessionStorage.getItem('isLoggedIn') === 'true') {
+                showDashboard();
+            }
+            
+            // Login form submission
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                
+                // Simple authentication (for demo purposes)
+                if (username === 'admin' && password === 'admin123') {
+                    sessionStorage.setItem('isLoggedIn', 'true');
+                    showDashboard();
+                } else {
+                    alert('Invalid credentials. Please use admin/admin123');
+                }
+            });
+            
+            // Logout functionality
+            logoutBtn.addEventListener('click', function() {
+                sessionStorage.removeItem('isLoggedIn');
+                showLogin();
+            });
+            
+            // Navigation
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const section = this.getAttribute('data-section');
+                    showSection(section);
+                });
+            });
+            
+            // Show login page
+            function showLogin() {
+                hideAllSections();
+                loginSection.style.display = 'flex';
+                loginBtn.style.display = 'block';
+                logoutBtn.style.display = 'none';
+            }
+            
+            // Show dashboard
+            function showDashboard() {
+                hideAllSections();
+                dashboardSection.classList.add('active');
+                loginBtn.style.display = 'none';
+                logoutBtn.style.display = 'block';
+                loginSection.style.display = 'none';
+            }
+            
+            // Show specific section
+            function showSection(sectionName) {
+                hideAllSections();
+                
+                switch(sectionName) {
+                    case 'dashboard':
+                        dashboardSection.classList.add('active');
+                        break;
+                    case 'places':
+                        placesSection.classList.add('active');
+                        break;
+                    case 'guides':
+                        guidesSection.classList.add('active');
+                        updateGuidePlaceOptions();
+                        break;
+                    case 'transport':
+                        transportSection.classList.add('active');
+                        updateTransportPlaceOptions();
+                        break;
+                }
+            }
+            
+            // Hide all sections
+            function hideAllSections() {
+                const sections = document.querySelectorAll('.section');
+                sections.forEach(section => {
+                    section.classList.remove('active');
+                });
+            }
+            
+            // Update dropdown options for places in guides and transport forms
+            function updateGuidePlaceOptions() {
+                const guidePlaceSelect = document.getElementById('guidePlace');
+                guidePlaceSelect.innerHTML = '<option value="">Select place (optional)</option>';
+                
+                touristPlaces.forEach(place => {
+                    const option = document.createElement('option');
+                    option.value = place.name;
+                    option.textContent = place.name;
+                    guidePlaceSelect.appendChild(option);
+                });
+            }
+            
+            function updateTransportPlaceOptions() {
+                const transportPlaceSelect = document.getElementById('transportPlace');
+                transportPlaceSelect.innerHTML = '<option value="">Select destination (optional)</option>';
+                
+                touristPlaces.forEach(place => {
+                    const option = document.createElement('option');
+                    option.value = place.name;
+                    option.textContent = place.name;
+                    transportPlaceSelect.appendChild(option);
+                });
+            }
+            
+            // Add Tourist Place functionality
+            const addPlaceForm = document.getElementById('addPlaceForm');
+            addPlaceForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const place = {
+                    name: document.getElementById('placeName').value,
+                    description: document.getElementById('placeDescription').value,
+                    category: document.getElementById('placeCategory').value,
+                    riskLevel: document.getElementById('riskLevel').value
+                };
+                
+                touristPlaces.push(place);
+                addPlaceForm.reset();
+                updatePlacesTable();
+                alert('Tourist place added successfully!');
+            });
+            
+            // Update places table
+            function updatePlacesTable() {
+                const placesTable = document.getElementById('placesTable');
+                const placesTableBody = document.getElementById('placesTableBody');
+                const placesEmptyState = document.getElementById('placesEmptyState');
+                
+                if (touristPlaces.length > 0) {
+                    placesEmptyState.style.display = 'none';
+                    placesTable.style.display = 'table';
+                    
+                    placesTableBody.innerHTML = '';
+                    
+                    touristPlaces.forEach(place => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${place.name}</td>
+                            <td>${place.category}</td>
+                            <td>${place.riskLevel}</td>
+                            <td>
+                                <button class="btn" onclick="editPlace('${place.name}')">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="btn" onclick="deletePlace('${place.name}')" style="background: #ef4444;">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </td>
+                        `;
+                        placesTableBody.appendChild(row);
+                    });
+                } else {
+                    placesEmptyState.style.display = 'block';
+                    placesTable.style.display = 'none';
+                }
+            }
+            
+            // Add Guide functionality
+            const addGuideForm = document.getElementById('addGuideForm');
+            addGuideForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const guide = {
+                    name: document.getElementById('guideName').value,
+                    phone: document.getElementById('guidePhone').value,
+                    languages: document.getElementById('guideLanguages').value,
+                    experience: document.getElementById('guideExperience').value,
+                    assignedPlace: document.getElementById('guidePlace').value
+                };
+                
+                guides.push(guide);
+                addGuideForm.reset();
+                updateGuidesTable();
+                alert('Guide added successfully!');
+            });
+            
+            // Update guides table
+            function updateGuidesTable() {
+                const guidesTable = document.getElementById('guidesTable');
+                const guidesTableBody = document.getElementById('guidesTableBody');
+                const guidesEmptyState = document.getElementById('guidesEmptyState');
+                
+                if (guides.length > 0) {
+                    guidesEmptyState.style.display = 'none';
+                    guidesTable.style.display = 'table';
+                    
+                    guidesTableBody.innerHTML = '';
+                    
+                    guides.forEach(guide => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${guide.name}</td>
+                            <td>${guide.phone}</td>
+                            <td>${guide.languages}</td>
+                            <td>${guide.experience} years</td>
+                            <td>${guide.assignedPlace || 'Not assigned'}</td>
+                            <td>
+                                <button class="btn" onclick="editGuide('${guide.name}')">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="btn" onclick="deleteGuide('${guide.name}')" style="background: #ef4444;">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </td>
+                        `;
+                        guidesTableBody.appendChild(row);
+                    });
+                } else {
+                    guidesEmptyState.style.display = 'block';
+                    guidesTable.style.display = 'none';
+                }
+            }
+            
+            // Add Transport functionality
+            const addTransportForm = document.getElementById('addTransportForm');
+            addTransportForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const transport = {
+                    type: document.getElementById('transportType').value,
+                    serviceName: document.getElementById('serviceName').value,
+                    route: document.getElementById('routeDescription').value,
+                    contact: document.getElementById('contactDetails').value,
+                    fare: document.getElementById('fare').value,
+                    destination: document.getElementById('transportPlace').value
+                };
+                
+                transportOptions.push(transport);
+                addTransportForm.reset();
+                updateTransportTable();
+                alert('Transport option added successfully!');
+            });
+            
+            // Update transport table
+            function updateTransportTable() {
+                const transportTable = document.getElementById('transportTable');
+                const transportTableBody = document.getElementById('transportTableBody');
+                const transportEmptyState = document.getElementById('transportEmptyState');
+                
+                if (transportOptions.length > 0) {
+                    transportEmptyState.style.display = 'none';
+                    transportTable.style.display = 'table';
+                    
+                    transportTableBody.innerHTML = '';
+                    
+                    transportOptions.forEach(transport => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${transport.type}</td>
+                            <td>${transport.serviceName}</td>
+                            <td>${transport.route}</td>
+                            <td>${transport.contact}</td>
+                            <td>₹${transport.fare}</td>
+                            <td>${transport.destination || 'Not specified'}</td>
+                            <td>
+                                <button class="btn" onclick="editTransport('${transport.serviceName}')">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="btn" onclick="deleteTransport('${transport.serviceName}')" style="background: #ef4444;">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </td>
+                        `;
+                        transportTableBody.appendChild(row);
+                    });
+                } else {
+                    transportEmptyState.style.display = 'block';
+                    transportTable.style.display = 'none';
+                }
+            }
+            
+            // Placeholder functions for edit/delete operations
+            window.editPlace = function(name) {
+                alert(`Edit functionality for ${name} would be implemented here.`);
+            };
+            
+            window.deletePlace = function(name) {
+                if (confirm(`Are you sure you want to delete ${name}?`)) {
+                    touristPlaces = touristPlaces.filter(place => place.name !== name);
+                    updatePlacesTable();
+                }
+            };
+            
+            window.editGuide = function(name) {
+                alert(`Edit functionality for ${name} would be implemented here.`);
+            };
+            
+            window.deleteGuide = function(name) {
+                if (confirm(`Are you sure you want to delete ${name}?`)) {
+                    guides = guides.filter(guide => guide.name !== name);
+                    updateGuidesTable();
+                }
+            };
+            
+            window.editTransport = function(name) {
+                alert(`Edit functionality for ${name} would be implemented here.`);
+            };
+            
+            window.deleteTransport = function(name) {
+                if (confirm(`Are you sure you want to delete ${name}?`)) {
+                    transportOptions = transportOptions.filter(transport => transport.serviceName !== name);
+                    updateTransportTable();
+                }
+            };
+        });
+    </script>
+</body>
+</html>

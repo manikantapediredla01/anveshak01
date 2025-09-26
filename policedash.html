@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Police Control Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #334155;
+        }
+
+        /* Login Page Styles */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            padding: 20px;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+        }
+
+        .login-header {
+            margin-bottom: 30px;
+        }
+
+        .login-icon {
+            width: 80px;
+            height: 80px;
+            background: #eff6ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .login-icon i {
+            font-size: 36px;
+            color: #3b82f6;
+        }
+
+        .login-title {
+            font-size: 28px;
+            color: #1e40af;
+            margin-bottom: 10px;
+        }
+
+        .login-subtitle {
+            font-size: 16px;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        .login-input {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .login-btn:hover {
+            background: #2563eb;
+        }
+
+        .login-info {
+            background: #f1f5f9;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .info-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-text {
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        /* Dashboard Styles (initially hidden) */
+        .dashboard-content {
+            display: none;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 15px 40px;
+            color: black;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-radius: 20px;
+        }
+
+        .navbar .logo {
+            font-weight: 700;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar .logo span {
+            color: #93c5fd;
+            margin-left: 5px;
+        }
+
+        .navbar .logo i {
+            margin-right: 10px;
+            font-size: 28px;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links li {
+            position: relative;
+        }
+
+        .nav-links a {
+            color: black;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .nav-links a i {
+            margin-right: 8px;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            background: white;
+            color: #334155;
+            padding: 15px;
+            list-style: none;
+            top: 100%;
+            left: 0;
+            min-width: 220px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            border-radius: 8px;
+            z-index: 10;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-menu li a {
+            color: #334155;
+            display: block;
+            padding: 10px 15px;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .dropdown-menu li a:hover {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .login-btn-nav {
+            background: white;
+            color: #2563eb;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-btn-nav:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .login-btn-nav i {
+            margin-right: 8px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .dashboard-header {
+            margin-bottom: 30px;
+        }
+
+        .dashboard-header h1 {
+            font-size: 32px;
+            color: #1e40af;
+            margin-bottom: 10px;
+        }
+
+        .dashboard-header p {
+            font-size: 18px;
+            color: #64748b;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        .alerts-section, .officers-section, .efirs-section, .quick-actions-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .section-header h2 {
+            font-size: 20px;
+            color: #1e293b;
+        }
+
+        .alert-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .alert-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .alert-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .alert-id {
+            font-weight: 600;
+            color: #1e40af;
+        }
+
+        .alert-type {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .alert-type.emergency {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .alert-type.general {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .alert-type.anomaly {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .alert-tourist {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .alert-location {
+            color: #64748b;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .alert-time {
+            color: #94a3b8;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 8px;
+        }
+
+        .alert-description {
+            color: #475569;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .alert-status {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .status-high {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .status-medium {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-low {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .status-resolved {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .officer-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .officer-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .officer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .officer-name {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .officer-status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .status-available {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .status-busy {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-on-case {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .officer-details {
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .officer-cases {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .officer-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .contact-btn {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .contact-btn:hover {
+            background: #2563eb;
+        }
+
+        .case-btn {
+            background: #f1f5f9;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+        }
+
+        .case-btn:hover {
+            background: #e2e8f0;
+        }
+
+        .fir-list {
+            list-style: none;
+        }
+
+        .fir-item {
+            padding: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .fir-item:last-child {
+            border-bottom: none;
+        }
+
+        .fir-type {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 5px;
+        }
+
+        .fir-details {
+            color: #64748b;
+            margin-bottom: 5px;
+        }
+
+        .fir-time {
+            color: #94a3b8;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .fir-status {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-top: 8px;
+        }
+
+        .quick-actions-list {
+            list-style: none;
+        }
+
+        .action-item {
+            padding: 15px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .action-item:last-child {
+            border-bottom: none;
+        }
+
+        .action-item:hover {
+            background-color: #f1f5f9;
+        }
+
+        .action-checkbox {
+            width: 20px;
+            height: 20px;
+            accent-color: #3b82f6;
+        }
+
+        .action-label {
+            font-weight: 500;
+            color: #1e293b;
+        }
+
+        .action-content {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .action-content h3 {
+            color: #1e40af;
+            margin-bottom: 10px;
+        }
+
+        .action-content p {
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        .action-item.active .action-content {
+            display: block;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 1200px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page (initially visible) -->
+    <div class="login-container" id="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h1 class="login-title">Police Control Dashboard</h1>
+                <p class="login-subtitle">Enter your credentials to access the police control dashboard</p>
+            </div>
+
+            <div class="login-input">
+                <label class="input-label">Username</label>
+                <input type="text" class="input-field" id="username" placeholder="Enter your username">
+            </div>
+
+            <div class="login-input">
+                <label class="input-label">Password</label>
+                <input type="password" class="input-field" id="password" placeholder="Enter your password">
+            </div>
+
+            <button class="login-btn" id="login-btn">
+                <i class="fas fa-lock"></i> Login to Dashboard
+            </button>
+
+            <div class="login-info">
+                <div class="info-title">
+                    <i class="fas fa-info-circle"></i> Login Information
+                </div>
+                <p class="info-text">
+                    For demonstration purposes, use:<br>
+                    Username: <strong>admin</strong><br>
+                    Password: <strong>police123</strong>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Content (initially hidden) -->
+    <div class="dashboard-content" id="dashboard-content">
+        <nav class="navbar">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+                Tourist<span>Safety</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="./index.html" class="active"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="./touristplace.html"><i class="fas fa-microchip"></i>Tourist Places</a></li>
+                <li class="dropdown">
+                    <a href="#"><i class="fas fa-concierge-bell"></i> Tourist Services ▾</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="./logguide.html"><i class="fas fa-map-marked-alt"></i> Guides</a></li>
+                        <li><a href="./travel.html"><i class="fas fa-bus"></i> Transport</a></li>
+                        <li><a href="./emergency.html"><i class="fas fa-ambulance"></i> Emergency</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#"><i class="fas fa-user-shield"></i> Authorities ▾</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="./policedash.html"><i class="fas fa-tachometer-alt"></i> Police Dashboard</a></li>
+                        <li><a href="./adminaccess.html"><i class="fas fa-landmark"></i> Tourism Department</a></li>
+                        <li><a href="./addplace.html"><i class="fas fa-file-alt"></i> Tourist Place Management</a></li>
+                        <li><a href="./efir.html"><i class="fas fa-file-alt"></i> E-FIR Management</a></li>
+                         <li><a href="./iotmanage.html"><i class="fas fa-file-alt"></i> IoT Monitoring</a></li>
+                    </ul>
+                </li>
+                <li><a href="./iotint.html"><i class="fas fa-microchip"></i> IoT Integration</a></li>
+            </ul>
+            <button class="login-btn-nav" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </nav>
+
+        <div class="container">
+            <div class="dashboard-header">
+                <h1>Police Control Dashboard</h1>
+                <p>Real-time monitoring and emergency response coordination</p>
+            </div>
+
+            <div class="dashboard-grid">
+                <div>
+                    <div class="alerts-section">
+                        <div class="section-header">
+                            <h2>Active Alerts & Emergency Response</h2>
+                        </div>
+
+                        <div class="alert-card">
+                            <div class="alert-header">
+                                <span class="alert-id">ID: ALT001</span>
+                                <span class="alert-type emergency">Emergency Alert</span>
+                            </div>
+                            <div class="alert-tourist">Tourist: John Smith (DT2024001)</div>
+                            <div class="alert-location"><i class="fas fa-map-marker-alt"></i> Connaught Place, Delhi</div>
+                            <div class="alert-time"><i class="far fa-clock"></i> 2 min ago</div>
+                            <div class="alert-description">Tourist reported feeling unsafe, panic button activated</div>
+                            <span class="alert-status status-high">High Priority</span>
+                        </div>
+
+                        <div class="alert-card">
+                            <div class="alert-header">
+                                <span class="alert-id">ID: ALT002</span>
+                                <span class="alert-type general">Generalized Alert</span>
+                            </div>
+                            <div class="alert-tourist">Tourist: Maria Garcia (DT2024002)</div>
+                            <div class="alert-location"><i class="fas fa-map-marker-alt"></i> Restricted Area - Red Fort</div>
+                            <div class="alert-time"><i class="far fa-clock"></i> 15 min ago</div>
+                            <div class="alert-description">Tourist entered restricted zone after closing hours</div>
+                            <span class="alert-status status-medium">Medium Priority</span>
+                        </div>
+
+                        <div class="alert-card">
+                            <div class="alert-header">
+                                <span class="alert-id">ID: ALT003</span>
+                                <span class="alert-type anomaly">Anomaly Alert</span>
+                            </div>
+                            <div class="alert-tourist">Tourist: Li Wei (DT2024003)</div>
+                            <div class="alert-location"><i class="fas fa-map-marker-alt"></i> Old Delhi Market</div>
+                            <div class="alert-time"><i class="far fa-clock"></i> 1 hour ago</div>
+                            <div class="alert-description">Unusual movement pattern detected. Tourist was shopping</div>
+                            <span class="alert-status status-resolved">Resolved</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="officers-section">
+                        <div class="section-header">
+                            <h2>On Duty Officers</h2>
+                        </div>
+
+                        <div class="officer-card">
+                            <div class="officer-header">
+                                <span class="officer-name">Inspector Raj Sharma</span>
+                                <span class="officer-status status-on-case">On Case</span>
+                            </div>
+                            <div class="officer-details">CP Police Station</div>
+                            <div class="officer-cases">Active Cases: 3</div>
+                            <div class="officer-actions">
+                                <button class="action-btn contact-btn">Contact</button>
+                                <button class="action-btn case-btn">View Cases</button>
+                            </div>
+                        </div>
+
+                        <div class="officer-card">
+                            <div class="officer-header">
+                                <span class="officer-name">Constable Priya Singh</span>
+                                <span class="officer-status status-busy">Busy</span>
+                            </div>
+                            <div class="officer-details">Tourism Unit</div>
+                            <div class="officer-cases">Active Cases: 1</div>
+                            <div class="officer-actions">
+                                <button class="action-btn contact-btn">Contact</button>
+                                <button class="action-btn case-btn">View Cases</button>
+                            </div>
+                        </div>
+
+                        <div class="officer-card">
+                            <div class="officer-header">
+                                <span class="officer-name">Sub-Inspector Kumar</span>
+                                <span class="officer-status status-available">Available</span>
+                            </div>
+                            <div class="officer-details">Red Fort Unit</div>
+                            <div class="officer-cases">Active Cases: 2</div>
+                            <div class="officer-actions">
+                                <button class="action-btn contact-btn">Contact</button>
+                                <button class="action-btn case-btn">View Cases</button>
+                            </div>
+                        </div>
+
+                        <div class="officer-card">
+                            <div class="officer-header">
+                                <span class="officer-name">Head Constable Gupta</span>
+                                <span class="officer-status status-available">Available</span>
+                            </div>
+                            <div class="officer-details">Emergency Response</div>
+                            <div class="officer-cases">Active Cases: 0</div>
+                            <div class="officer-actions">
+                                <button class="action-btn contact-btn">Contact</button>
+                                <button class="action-btn case-btn">Assign Case</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="efirs-section">
+                        <div class="section-header">
+                            <h2>Recent E-FIRs</h2>
+                        </div>
+
+                        <ul class="fir-list">
+                            <li class="fir-item">
+                                <div class="fir-type">Theft</div>
+                                <div class="fir-details">John Smith - ID: EFI8001</div>
+                                <div class="fir-time"><i class="far fa-clock"></i> 4 hours ago</div>
+                                <span class="fir-status status-high">Under Investigation</span>
+                            </li>
+                            <li class="fir-item">
+                                <div class="fir-type">Assault</div>
+                                <div class="fir-details">Maria Garcia - ID: EFI8002</div>
+                                <div class="fir-time"><i class="far fa-clock"></i> 6 hours ago</div>
+                                <span class="fir-status status-medium">Evidence Gathering</span>
+                            </li>
+                            <li class="fir-item">
+                                <div class="fir-type">Harassment</div>
+                                <div class="fir-details">Ahmed Hassan - ID: EFI8003</div>
+                                <div class="fir-time"><i class="far fa-clock"></i> 1 day ago</div>
+                                <span class="fir-status status-resolved">Completed</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="quick-actions-section">
+                        <div class="section-header">
+                            <h2>Quick Actions</h2>
+                        </div>
+
+                        <ul class="quick-actions-list">
+                            <li class="action-item" data-action="search">
+                                <input type="checkbox" class="action-checkbox" id="search-tourist">
+                                <label for="search-tourist" class="action-label">Search Tourist ID</label>
+                                <div class="action-content">
+                                    <h3>Search Tourist ID</h3>
+                                    <p>Look up tourist information by ID, name, or passport number. Access complete profiles with contact information and travel history.</p>
+                                    <div class="search-box" style="margin-top: 10px;">
+                                        <input type="text" placeholder="Enter ID or name" style="padding: 8px; width: 70%; border-radius: 4px; border: 1px solid #ddd;">
+                                        <button style="padding: 8px 15px; background: #3b82f6; color: white; border: none; border-radius: 4px; margin-left: 5px;">Search</button>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="action-item" data-action="map">
+                                <input type="checkbox" class="action-checkbox" id="view-map" checked>
+                                <label for="view-map" class="action-label">View Live Map</label>
+                                <div class="action-content">
+                                    <h3>Live Map View</h3>
+                                    <p>Access real-time tracking of tourists, patrol units, and reported incidents. Filter by location, alert type, or time period.</p>
+                                    <div style="margin-top: 10px; padding: 10px; background: #e2e8f0; border-radius: 4px; text-align: center;">
+                                        <i class="fas fa-map-marked-alt" style="font-size: 24px; color: #64748b;"></i>
+                                        <p style="margin-top: 5px; color: #64748b;">Map would be displayed here</p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="action-item" data-action="report">
+                                <input type="checkbox" class="action-checkbox" id="generate-report">
+                                <label for="generate-report" class="action-label">Generate Report</label>
+                                <div class="action-content">
+                                    <h3>Generate Report</h3>
+                                    <p>Create custom reports on incidents, tourist activities, or officer assignments. Export data in multiple formats for analysis.</p>
+                                    <div style="margin-top: 10px;">
+                                        <select style="padding: 8px; width: 100%; border-radius: 4px; border: 1px solid #ddd; margin-bottom: 10px;">
+                                            <option>Select Report Type</option>
+                                            <option>Incident Report</option>
+                                            <option>Tourist Activity</option>
+                                            <option>Officer Assignments</option>
+                                        </select>
+                                        <button style="padding: 8px 15px; background: #10b981; color: white; border: none; border-radius: 4px; width: 100%;">Generate Report</button>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="action-item" data-action="broadcast">
+                                <input type="checkbox" class="action-checkbox" id="emergency-broadcast">
+                                <label for="emergency-broadcast" class="action-label">Emergency Broadcast</label>
+                                <div class="action-content">
+                                    <h3>Emergency Broadcast</h3>
+                                    <p>Send urgent alerts to all personnel and tourists in specific areas. Use this for critical situations requiring immediate attention.</p>
+                                    <div style="margin-top: 10px;">
+                                        <textarea placeholder="Enter emergency message" style="width: 100%; height: 80px; padding: 8px; border-radius: 4px; border: 1px solid #ddd; margin-bottom: 10px;"></textarea>
+                                        <button style="padding: 8px 15px; background: #dc2626; color: white; border: none; border-radius: 4px; width: 100%;">Send Broadcast</button>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginBtn = document.getElementById('login-btn');
+            const logoutBtn = document.getElementById('logout-btn');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const loginContainer = document.getElementById('login-container');
+            const dashboardContent = document.getElementById('dashboard-content');
+            
+            // Focus on username field
+            usernameInput.focus();
+            
+            // Check if user is already logged in
+            if (localStorage.getItem('policeLoggedIn') === 'true') {
+                showDashboard();
+            }
+            
+            // Login button functionality
+            loginBtn.addEventListener('click', function() {
+                const username = usernameInput.value.trim();
+                const password = passwordInput.value.trim();
+                
+                if (!username || !password) {
+                    alert('Please enter both username and password');
+                    return;
+                }
+                
+                // Simple validation for demo purposes
+                if (username === 'admin' && password === 'police123') {
+                    // Simulate login process
+                    loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
+                    loginBtn.disabled = true;
+                    
+                    setTimeout(function() {
+                        // Successful login
+                        localStorage.setItem('policeLoggedIn', 'true');
+                        showDashboard();
+                    }, 1500);
+                } else {
+                    alert('Invalid credentials. Please try again.\n\nFor demo purposes, use:\nUsername: admin\nPassword: police123');
+                }
+            });
+            
+            // Logout functionality
+            logoutBtn.addEventListener('click', function() {
+                localStorage.removeItem('policeLoggedIn');
+                showLoginPage();
+            });
+            
+            // Allow Enter key to submit
+            usernameInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    loginBtn.click();
+                }
+            });
+            
+            passwordInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    loginBtn.click();
+                }
+            });
+            
+            // Show dashboard function
+            function showDashboard() {
+                loginContainer.style.display = 'none';
+                dashboardContent.style.display = 'block';
+                loginBtn.innerHTML = '<i class="fas fa-lock"></i> Login to Dashboard';
+                loginBtn.disabled = false;
+            }
+            
+            // Show login page function
+            function showLoginPage() {
+                loginContainer.style.display = 'flex';
+                dashboardContent.style.display = 'none';
+                usernameInput.value = '';
+                passwordInput.value = '';
+                loginBtn.innerHTML = '<i class="fas fa-lock"></i> Login to Dashboard';
+                loginBtn.disabled = false;
+            }
+            
+            // Quick actions functionality
+            document.querySelectorAll('.action-item').forEach(item => {
+                const checkbox = item.querySelector('.action-checkbox');
+                
+                item.addEventListener('click', function(e) {
+                    if (e.target !== checkbox) {
+                        checkbox.checked = !checkbox.checked;
+                    }
+                    
+                    const isChecked = checkbox.checked;
+                    
+                    // Toggle active class
+                    if (isChecked) {
+                        item.classList.add('active');
+                    } else {
+                        item.classList.remove('active');
+                    }
+                    
+                    // For demonstration, log the action
+                    const action = item.getAttribute('data-action');
+                    console.log(`Action ${isChecked ? 'enabled' : 'disabled'}: ${action}`);
+                });
+            });
+
+            // Officer contact buttons
+            document.querySelectorAll('.contact-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const officerCard = this.closest('.officer-card');
+                    const officerName = officerCard.querySelector('.officer-name').textContent;
+                    alert(`Contacting ${officerName}...`);
+                });
+            });
+
+            // Officer case buttons
+            document.querySelectorAll('.case-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const officerCard = this.closest('.officer-card');
+                    const officerName = officerCard.querySelector('.officer-name').textContent;
+                    alert(`Viewing cases for ${officerName}...`);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
